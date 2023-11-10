@@ -11,7 +11,7 @@ while (<STDIN>) {
   ($sizeK, $path)=split(/\t/);
   die "size?" unless $sizeK=~/^[0-9]+$/;
   die "$path?" unless $path=~/\S\/\S/;
-  die "$path??" unless ( -e "$path" );
+  warn "$path??" unless ( -e "$path" );
   ($dir, $base)=split(/\//, $path);
   $key="misc";
   if ($base=~/^(\d+)_(\d\d)/) { 
