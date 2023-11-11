@@ -1,4 +1,4 @@
-1. check panic.txt (folder?)
-2. check error code
-3. git
-4. AWS s3
+#1. check panic.txt (folder?)
+#2. check error code
+index => git
+AWS s3
