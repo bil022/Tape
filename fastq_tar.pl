@@ -19,10 +19,10 @@ while (<STDIN>) {
     $key="${year}_$mm";
   }
   $SIZE{$key}+=$sizeK;
-  push(@{$hash{$key}}, $path);
+  push(@{$hash{$key}}, '"'.$path.'"');
 }
 
 foreach $key (keys %hash) {
   print("echo $key $SIZE{$key} K\n");
-  print("tar -cvf $dst/$key.tar -C @{$hash{$key}}\n");
+  print("tar -cvf $dst/$key.tar -C $dir @{$hash{$key}}\n");
 }
