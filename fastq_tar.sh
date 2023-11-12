@@ -16,9 +16,10 @@ if [ $du -gt $df ]; then
 fi
 
 [ -e tape_finder ] || git clone https://github.com/bil022/tape_finder
-echo "find $* -ls | gzip > tape_finder/$dst.find.txt.gz"
-echo "rsync -av tape_finder/$dst.find.txt.gz $dst/."
-echo "pushd tape_finder; git add $dst.find.txt.gz; git commit -m '$dst.find.txt.gz'; git push; popd"
+bz2=tape_finder/$dst.find.txt.bz2
+echo "find $* -ls | bzip2 > $bz2"
+echo "rsync -av $bz2 $dst/."
+echo "pushd tape_finder; git add $bz2; git commit -m '$bz2'; git push; popd"
 
 for dir in $*; do
   if ! [ -d $dir ]; then echo "dir? $dir"; exit; fi
