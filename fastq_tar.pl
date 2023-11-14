@@ -32,7 +32,7 @@ while (<STDIN>) {
 }
 
 print "$SRC{HEAD}" if exists $SRC{HEAD};
-foreach $key (keys %hash) {
+foreach $key (sort keys %hash) {
   print("echo $key $SIZE{$key} K\n");
   print("tar -cvf $dst/$key.tar -C $dir @{$hash{$key}}\n");
   print("check_ret $dst/$key.tar \$*\n");
