@@ -5,19 +5,11 @@ $dst=$ARGV[0];
 $dst=~s/\/$//;
 die "dst? $dst" unless ( -d "$dst" );
 
-while (<DATA>) {
-  if (/^(\S+):/) {
-    $SRC{$tag}=$script; undef $script;
-    $tag=$1; next;
-  }
-  $script.=$_;
-}
-$SRC{$tag}=$script if $tag;
-
+$sumK=0;
 while (<STDIN>) {
   chomp();
   s/\/+/\//g;
-  ($sizeK, $path)=split(/\t/);
+  ($sizeK, $path)=split(/\t/); $sumK+=$sizeK;
   die "size?" unless $sizeK=~/^[0-9]+$/;
   die "$path?" unless $path=~/\S\/\S/;
   warn "$path??" unless ( -e "$path" );
@@ -30,6 +22,16 @@ while (<STDIN>) {
   $SIZE{$key}+=$sizeK;
   push(@{$hash{$key}}, '"'.$path.'"');
 }
+
+while (<DATA>) {
+  if (/^(\S+):/) {
+    $SRC{$tag}=$script; undef $script;
+    $tag=$1; next;
+  }
+  s/SIZE/$sumK/g;
+  $script.=$_;
+}
+$SRC{$tag}=$script if $tag;
 
 print "$SRC{HEAD}" if exists $SRC{HEAD};
 foreach $key (sort keys %hash) {
@@ -44,14 +46,14 @@ HEAD:
 #!/bin/bash
   
 df=`df -g . | awk '{n=$4}END{print n}'`
-if [ $df -eq 0 ]; then echo "No space"; exit; fi
+if [ $df -lt SIZE ]; then echo "Not enough space: $df < SIZE"; exit; fi
 
 pid=${0%%sh}pid
 if [ -f $pid ]; then echo "Found $pid"; exit; fi
 echo $$ > $pid
 
 panic=${0%%sh}panic
-if [ -e $panic ]; then echo "Fanic $panic"; exit; fi
+if [ -e $panic ]; then echo "Panic $panic"; exit; fi
 
 function check_ret {
   msg=$1; shift
