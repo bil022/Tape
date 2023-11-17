@@ -1,18 +1,18 @@
 #!/bin/bash
 
-if [ $# -lt 2 ]; then echo "Usage: $0 <dst> <src>..."; exit; fi
+if [ $# -lt 2 ]; then echo "Usage: $0 <dst> <src>..."; exit; fi    #if there are less than two inputs, show usage and exit
 
-dst=$1
-shift
+dst=$1    #record the destination
+shift    #move to the next parameter
 
-pl=${0%%sh}pl
-if ! [ -e $pl ]; then echo "$pl?"; exit; fi
+pl=${0%%sh}pl    #check if the corresponding .pl file exists
+if ! [ -e $pl ]; then echo "$pl?"; exit; fi    #if not, print out the error and exit
 
-du=`du -g $* | awk '{print $1}'`
-df=`df -g . | awk '{n=$4}END{print n+1}'`
+du=`du -g $* | awk '{print $1}'`    ## ??? du -h --human-readable ??? ###the check source folder's size
+df=`df -g . | awk '{n=$4}END{print n+1}'`    ## ??? df -H ??? ###check the destination space availability
 
-if [ $du -gt $df ]; then
-  echo "Not enough space $du > $df"; exit;
+if [ $du -gt $df ]; then    ##if no enough space
+  echo "Not enough space $du > $df"; exit;    ##print out the error and exit
 fi
 
 [ -e tape_finder ] || git clone https://github.com/bil022/tape_finder
