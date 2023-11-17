@@ -37,7 +37,7 @@ print "$SRC{HEAD}" if exists $SRC{HEAD};    #print out "HEAD:" in the hash table
 foreach $key (sort keys %hash) {    #go through each key in the hash table "hash" which is the target
   print("echo $key $SIZE{$key} K\n");    #print out the size of the target
   print("tar -cvf $dst/$key.tar -C $dir @{$hash{$key}}\n");    #print out the tar command that will be used to compress the folders
-  print("check_ret $dst/$key.tar \$*\n");    #check if the tar command runs through without any issue (function "check_ret" is defined below) 
+  print("check_ret $dst/$key.tar \$?\n");    #check if the tar command runs through without any issue (function "check_ret" is defined below) 
 }
 print "$SRC{TAIL}" if exists $SRC{TAIL};    #print out "TAIL:" in the hash table "SRC"
 
