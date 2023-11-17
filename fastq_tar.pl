@@ -45,7 +45,7 @@ __END__
 HEAD:
 #!/bin/bash
   
-df=`df -g . | awk '{n=$4}END{print n}'`
+df=`df -k . | awk '{n=$4}END{print n+1000}'`
 if [ $df -lt SIZE ]; then echo "Not enough space: $df < SIZE"; exit; fi
 
 pid=${0%%sh}pid
