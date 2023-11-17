@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 ###############################
-# After executing this script successfully, a file output.sh will be generated and used to submit the job to compress folders and put them on tape.
+# After executing this script successfully, a .sh file will be generated and used to submit the job to compress folders and put them on tape.
+# Example input format: input.txt
+# Example output: output.sh
 ###############################
 
 die "usage: $ARGV[0]" unless @ARGV;    #a destination folder is required as an input
