@@ -25,13 +25,13 @@ while (<STDIN>) {
 
 while (<DATA>) {    #start to read content after "__END__"
   if (/^(\S+):/) {    #when reaching the point start with non-whitespace followed by ":", in this case, "HEAD:" and "TAIL:"
-    $SRC{$tag}=$script; undef $script;    #record content in a hash table with the tag as key, in this case, "HEAD:" and "TAIL:"
+    $SRC{$tag}=$script; undef $script;    #record content in a hash table with the tag as key, in this case, "HEAD:" and "TAIL:"; clean up "script"
     $tag=$1; next;    #set the tag
   }
   s/SIZE/$sumK/g;    #substitute "SIZE" with the sum of the folder size (defined in line 8)
   $script.=$_;    #add to script
 }
-$SRC{$tag}=$script if $tag;    # ?? update the hash table content
+$SRC{$tag}=$script if $tag;    #update the hash table content for the last tag, in this case, "TAIL:"
 
 print "$SRC{HEAD}" if exists $SRC{HEAD};    #print out "HEAD:" in the hash table "SRC"
 foreach $key (sort keys %hash) {    #go through each key in the hash table "hash" which is the target
@@ -45,29 +45,29 @@ __END__
 HEAD:
 #!/bin/bash
   
-df=`df -k . | awk '{n=$4}END{print n+1000}'`
-if [ $df -lt SIZE ]; then echo "Not enough space: $df < SIZE"; exit; fi
+df=`df -k . | awk '{n=$4}END{print n+1000}'`    #check the space left on the hard drive in K, and add 1000 extra for safety
+if [ $df -lt SIZE ]; then echo "Not enough space: $df < SIZE"; exit; fi    #quit if the left hard drive space is less than the size needed for the target
 
-pid=${0%%sh}pid
-if [ -f $pid ]; then echo "Found $pid"; exit; fi
-echo $$ > $pid
+pid=${0%%sh}pid    #get the job ID
+if [ -f $pid ]; then echo "Found $pid"; exit; fi    #stop attempting to resubmit the job if the job ID already exists which means it's running
+echo $$ > $pid    #print out the job ID
 
-panic=${0%%sh}panic
-if [ -e $panic ]; then echo "Panic $panic"; exit; fi
+panic=${0%%sh}panic    #check if a panic file exists
+if [ -e $panic ]; then echo "Panic $panic"; exit; fi    #stop attempting to submit the job if the corresponding panic file exists which means an error exists
 
-function check_ret {
-  msg=$1; shift
-  for ret in $*; do
-    if [ $ret -ne 0 ]; then
-      echo $msg $* > $panic
-      locate mail
-      if [ $? -eq 0 ]; then
-        echo $msg $* | mail -s "Error in $msg" bil022@ucsd.edu
+function check_ret {    #defined function for error check returned from tar command
+  msg=$1; shift    #record target file to "msg" and move to the next parameter which might be the error if any
+  for ret in $*; do    #check each pipe option, in this case, there is only ONE
+    if [ $ret -ne 0 ]; then    #if there is an error
+      echo $msg $* > $panic    #put the target file and error info into a panic file
+      locate mail    #check if mail service exists
+      if [ $? -eq 0 ]; then    #if the mail service exists
+        echo $msg $* | mail -s "Error in $msg" bil022@ucsd.edu    #mail the panic file to the given email
       fi
-      exit
+      exit    #any error will stop the script from running any further
     fi
   done
-}
+}    #function end
 
 TAIL:
-rm $pid
+rm $pid    #clean up the job ID if runs successfully
