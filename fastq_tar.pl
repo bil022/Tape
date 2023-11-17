@@ -1,35 +1,35 @@
 #!/usr/bin/perl
 
-die "usage: $ARGV[0]" unless @ARGV;
+die "usage: $ARGV[0]" unless @ARGV;    #a destination folder is required as an input
 $dst=$ARGV[0];
-$dst=~s/\/$//;
-die "dst? $dst" unless ( -d "$dst" );
+$dst=~s/\/$//;    #get rid of "/" at the end of the folder name if have any
+die "dst? $dst" unless ( -d "$dst" );    #the destination must exist otherwise the script will stop
 
-$sumK=0;
+$sumK=0;    #the sum of the folder size
 while (<STDIN>) {
   chomp();
-  s/\/+/\//g;
-  ($sizeK, $path)=split(/\t/); $sumK+=$sizeK;
-  die "size?" unless $sizeK=~/^[0-9]+$/;
-  die "$path?" unless $path=~/\S\/\S/;
-  warn "$path??" unless ( -e "$path" );
-  ($dir, $base)=split(/\//, $path);
-  $key="misc";
-  if ($base=~/^(\d+)_(\d\d)/) { 
-    ($year, $mm)=($1, $2);
-    $key="${year}_$mm";
+  s/\/+/\//g;    #substitute multiple "/"s with one if any
+  ($sizeK, $path)=split(/\t/); $sumK+=$sizeK;    #get the size and path for each folder separated by tab and add the size to the sum
+  die "size?" unless $sizeK=~/^[0-9]+$/;    #size can only contain numerical otherwise the script will stops
+  die "$path?" unless $path=~/\S\/\S/;    #the path can only contain non-whitespace and "/" otherwise the script will stop
+  warn "$path??" unless ( -e "$path" );    #if the path does not exist a warning will be sent
+  ($dir, $base)=split(/\//, $path);    #get folder and sub-folder from path separated by "/"
+  $key="misc";    #the target for folders not match specific pattern: Y(1-4 digitals)_MM(2 digitals)
+  if ($base=~/^(\d+)_(\d\d)/) {    #if the sub-folder matches the pattern
+    ($year, $mm)=($1, $2);    #get the year and month for each sub-folder
+    $key="${year}_$mm";    #set the new target
   }
-  $SIZE{$key}+=$sizeK;
-  push(@{$hash{$key}}, '"'.$path.'"');
+  $SIZE{$key}+=$sizeK;    #record the size of the target
+  push(@{$hash{$key}}, '"'.$path.'"');    #record the folders for the target
 }
 
-while (<DATA>) {
-  if (/^(\S+):/) {
-    $SRC{$tag}=$script; undef $script;
-    $tag=$1; next;
+while (<DATA>) {    #start to read content after "__END__"
+  if (/^(\S+):/) {    #when reaching the point start with non-whitespace followed by ":", in this case, "HEAD:" and "TAIL:"
+    $SRC{$tag}=$script; undef $script;    #record content in a hash table with the tag as key, in this case, "HEAD:" and "TAIL:"
+    $tag=$1; next;    #set the tag
   }
-  s/SIZE/$sumK/g;
-  $script.=$_;
+  s/SIZE/$sumK/g;    #substitute "SIZE" with the sum of the folder size (defined in line 8)
+  $script.=$_;    #add to script
 }
 $SRC{$tag}=$script if $tag;
 
