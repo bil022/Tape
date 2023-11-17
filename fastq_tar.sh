@@ -21,7 +21,7 @@ echo "find $* -ls | bzip2 > $bz2"
 echo "rsync -av $bz2 $dst/."
 echo "pushd tape_finder; git add $bz2; git commit -m '$bz2'; git push; popd"
 
-for dir in $*; do
-  if ! [ -d $dir ]; then echo "dir? $dir"; exit; fi
-  find $dir -mindepth 1 -maxdepth 1 -exec du -sk '{}' \; | $pl $dst
+for dir in $*; do    #for each directory
+  if ! [ -d $dir ]; then echo "dir? $dir"; exit; fi    #if the directory does not exist, print out the error and exit
+  find $dir -mindepth 1 -maxdepth 1 -exec du -sk '{}' \; | $pl $dst    #if ...
 done
