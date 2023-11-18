@@ -2,7 +2,7 @@
 
 die "usage: $ARGV[0]" unless @ARGV;    #a destination folder is required as an input
 $dst=$ARGV[0];
-$dst=~s/\/$//;    #get rid of "/" at the end of the folder name if have any
+$dst=~s/\/+$//;    #get rid of "/" at the end of the folder name if have any
 die "dst? $dst" unless ( -d "$dst" );    #the destination must exist otherwise the script will stop
 
 $sumK=0;    #the sum of the folder size
@@ -28,7 +28,7 @@ while (<DATA>) {    #start to read content after "__END__"
     $SRC{$tag}=$script; undef $script;    #record content in a hash table with the tag as key, in this case, "HEAD:" and "TAIL:"
     $tag=$1; next;    #set the tag
   }
-  s/SIZE/$sumK/g;    #substitute "SIZE" with the sum of the folder size (defined in line 8)
+  s/{SIZE}/$sumK/g;    #substitute "SIZE" with the sum of the folder size (defined in line 8)
   $script.=$_;    #add to script
 }
 $SRC{$tag}=$script if $tag;    # ?? update the hash table content
@@ -46,7 +46,7 @@ HEAD:
 #!/bin/bash
   
 df=`df -k . | awk '{n=$4}END{print n+1000}'`
-if [ $df -lt SIZE ]; then echo "Not enough space: $df < SIZE"; exit; fi
+if [ $df -lt {SIZE} ]; then echo "Not enough space: $df < {SIZE}"; exit; fi
 
 pid=${0%%sh}pid
 if [ -f $pid ]; then echo "Found $pid"; exit; fi
