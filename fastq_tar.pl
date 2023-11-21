@@ -19,7 +19,7 @@ while (<STDIN>) {
   die "$path?" unless $path=~/\S\/\S/;    #the path can only contain non-whitespace and "/" otherwise the script will stop
   warn "$path??" unless ( -e "$path" );    #if the path does not exist a warning will be sent
   ($dir, $base)=split(/\//, $path);    #get folder and sub-folder from path separated by "/"
-  $key="misc";    #the target for folders not match specific pattern: Y(1-4 digitals)_MM(2 digitals)
+  $key="${dir}_misc";    #the target for folders not match specific pattern: Y(1-4 digitals)_MM(2 digitals)
   if ($base=~/^(\d+)_(\d\d)/) {    #if the sub-folder matches the pattern
     ($year, $mm)=($1, $2);    #get the year and month for each sub-folder
     $key="${year}_$mm";    #set the new target
