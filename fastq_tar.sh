@@ -25,3 +25,4 @@ for dir in $*; do    #for each directory
   if ! [ -d $dir ]; then echo "dir? $dir"; exit; fi    #if the directory does not exist, print out the error and exit
   find $dir -mindepth 1 -maxdepth 1 -exec du -sk '{}' \;
 done | $pl $dst
+echo "echo $* done"
