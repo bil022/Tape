@@ -8,7 +8,7 @@ shift    #move to the next parameter
 pl=${0%%sh}pl    #check if the corresponding .pl file exists
 if ! [ -e $pl ]; then echo "$pl?"; exit; fi    #if not, print out the error and exit
 
-du=`du -sk $* | awk '{print $1}'`    ## ??? du -h --human-readable ??? ###the check source folder's size
+du=`du -sk $* | awk '{n+=$1}END{print n}'`    ## ??? du -h --human-readable ??? ###the check source folder's size
 df=`df -k . | awk '{n=$4}END{print n+1000}'`    ## ??? df -H ??? ###check the destination space availability
 
 if [ $du -gt $df ]; then    ##if no enough space
