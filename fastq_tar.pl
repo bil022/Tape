@@ -51,7 +51,8 @@ __END__
 HEAD:
 #!/bin/bash
   
-df=`df -k . | awk '{n=$4}END{print n+1000}'`    #check the space left on the hard drive in K, and add 1000 extra for safety
+py=${0%%sh}py
+df=`df -k . | $py | awk '{print $1+1000}'`    #check the space left on the hard drive in K, and add 1000 extra for safety
 if [ $df -lt {SIZE} ]; then echo "Not enough space: $df < {SIZE}"; exit; fi    #quit if the left hard drive space is less than the size needed for the target
 
 pid=${0%%sh}pid    #get the job ID
