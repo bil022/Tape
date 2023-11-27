@@ -26,7 +26,7 @@ while (<STDIN>) {
   }
   $SIZE{$key}+=$sizeK;    #record the size of the target
   $DIR{$key}=$dir;
-  push(@{$hash{$key}}, '"'.$path.'"');    #record the folders for the target
+  push(@{$hash{$key}}, '"'.$base.'"');    #record the folders for the target
 }
 
 while (<DATA>) {    #start to read content after "__END__"
