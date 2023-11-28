@@ -6,3 +6,5 @@ AWS s3 rsync?
 tvf afterward
 
 nas8 runnable
+
+prevent re-run 1. check file 2. file done or panic...
