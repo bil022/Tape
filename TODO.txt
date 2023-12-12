@@ -6,3 +6,22 @@ AWS s3 rsync?
 tvf afterward
 
 nas8 runnable
+
+ren-macmini-m1:tape_H bli$ cat ../../tvf.sh 
+#!/bin/bash
+
+date
+for t in $*; do
+  echo $t
+  if [[ $t == *.tar ]]; then
+    tar -tvf $t
+  else
+    ls -ltr $t
+  fi
+done
+date
+ren-macmini-m1:tape_H bli$ ../../tvf.sh *.tar | bzip2 > tape_H.tvf.bz2
+ren-macmini-m1:tape_H bli$ ls ~/src/tape_finder/
+README.md		tape_B.tvf.bz2		tape_D.tvf.bz2		tape_G.tvf.bz2
+tape_A.tvf.bz2		tape_C.tvf.bz2		tape_F.tvf.bz2		tscc_bli.tvf.bz2
+ren-macmini-m1:tape_H bli$ mv tape_H.tvf.bz2 ~/src/tape_finder/.
