@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -lt 2 ]; then echo "Usage: $0 <dst> <src>..."; exit; fi    #if there are less than two inputs, show usage and exit
+if [ $# -lt 2 ]; then echo "Usage: bash $0 <dst> <src>..."; exit; fi    #if there are less than two inputs, show usage and exit
 
 dst=$1    #record the destination
 shift    #move to the next parameter
@@ -18,7 +18,7 @@ fi
 for dir in $*; do    #for each directory
   if ! [ -d $dir ]; then echo "dir? $dir"; exit; fi    #if the directory does not exist, print out the error and exit
   find $dir -mindepth 1 -maxdepth 1 -exec du -sk '{}' \;
-done | $pl $dst
+done | perl $pl $dst
 echo "echo $* done"
 
 #[ -e tape_finder ] || git clone https://github.com/bil022/tape_finder
