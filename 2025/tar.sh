@@ -12,8 +12,8 @@ BEGIN {
 }
 {
     # Use system command to get file size
-    gsub(/\$/, "\\$")
-    cmd = "stat --printf=\"%s\" \"" $0 "\""
+    f=$0; gsub(/\$/, "\\$", f);
+    cmd = "stat --printf=\"%s\" \"" f "\""
     cmd | getline file_size
     close(cmd)
     if (total_size + file_size > 1000 * 1024 * 1024 * 1024) {
