@@ -12,6 +12,7 @@ BEGIN {
 }
 {
     # Use system command to get file size
+    gsub(/\$/, "\\$")
     cmd = "stat --printf=\"%s\" \"" $0 "\""
     cmd | getline file_size
     close(cmd)
